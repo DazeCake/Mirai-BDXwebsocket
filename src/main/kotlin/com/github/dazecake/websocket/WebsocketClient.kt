@@ -1,5 +1,6 @@
 package com.github.dazecake.websocket
 
+import com.github.dazecake.BDXWebSocketPlugin
 import com.github.dazecake.CmdMap
 import com.github.dazecake.bot.BotClient
 import com.github.dazecake.data.Incoming
@@ -71,6 +72,10 @@ class WebsocketClient(private val serverInfo: ServerInfo) {
                     cmd = cmd
                 ))
             )
+        )
+
+        BDXWebSocketPlugin.logger.info(
+            "Sent BDX command -> $cmd"
         )
     }
 }
