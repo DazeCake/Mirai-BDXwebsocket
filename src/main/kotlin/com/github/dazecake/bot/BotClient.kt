@@ -38,19 +38,19 @@ object BotClient {
     }
 
     private suspend fun onMemberMessage(pkg: MemberMessage) {
-        pushMessage(pkg.text)
+        pushMessage("${pkg.target}: ${pkg.text}")
     }
 
     private suspend fun onMemberJoin(pkg: MemberJoin) {
-        pushMessage(pkg.text)
+        pushMessage("${pkg.target}加入了服务器")
     }
 
     private suspend fun onMemberLeave(pkg: MemberLeave) {
-        pushMessage(pkg.text)
+        pushMessage("${pkg.target}退出了服务器")
     }
 
     private suspend fun onMemberCmd(pkg: MemberCmd) {
-        pushMessage(pkg.CMD)
+        pushMessage("${pkg.target}执行了命令: ${pkg.CMD}")
     }
 
     private suspend fun onCmdResp(pkg: CmdResp) {
