@@ -22,7 +22,7 @@ import kotlinx.serialization.stringify
 @KtorExperimentalAPI
 @UnstableDefault
 @ImplicitReflectionSerializer
-class WebsocketClient(val serverInfo: ServerInfo) {
+class WebsocketClient(private val serverInfo: ServerInfo) {
 
     private val client = HttpClient {
         install(WebSockets)

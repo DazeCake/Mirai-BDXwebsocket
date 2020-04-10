@@ -8,7 +8,7 @@ import net.mamoe.mirai.contact.nameCardOrNick
 
 object Template {
 
-    const val SENDER_NAME = "\${senderName}"
+    private const val SENDER_NAME = "\${senderName}"
 
     lateinit var prefix: String
     lateinit var rebootCmd: String

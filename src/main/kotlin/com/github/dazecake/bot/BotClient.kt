@@ -50,7 +50,7 @@ object BotClient {
     }
 
     private suspend fun onMemberCmd(pkg: MemberCmd) {
-        pushMessage("${pkg.target}执行了命令: ${pkg.CMD}")
+//        pushMessage("${pkg.target}执行了命令: ${pkg.CMD}")
     }
 
     private suspend fun onCmdResp(pkg: CmdResp) {
