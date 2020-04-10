@@ -89,10 +89,10 @@ object BDXWebSocketPlugin : PluginBase() {
 
                     if (realCmd == null) realCmd = cmd
 
-                    realCmd = Template.replaceCmd(realCmd, when(this) {
-                        is GroupMessage -> sender // as Member
-                        else -> sender            // as QQ
-                    })
+                    realCmd = when(this) {
+                        is GroupMessage -> Template.replaceCmdWithMember(realCmd, sender) // as Member
+                        else  -> Template.replaceCmdWithFriend(realCmd, sender)  // as QQ
+                    }
 
                     websocket.sendCmd(realCmd)
                 }

@@ -18,13 +18,13 @@ object Template {
 
     fun load(section: ConfigSection) {
         prefix = section.getString("prefix")
-        prefix = section.getString("reboot_cmd")
-        prefix = section.getString("connect_msg")
-        prefix = section.getString("drop_msg")
-        prefix = section.getString("close_msg")
+        rebootCmd = section.getString("reboot_cmd")
+        connectMsg = section.getString("connect_msg")
+        dropMsg = section.getString("drop_msg")
+        closeMsg = section.getString("close_msg")
     }
 
-    fun replaceCmd(cmd: String, sender: Member) = cmd.replace(SENDER_NAME, sender.nameCardOrNick)
+    fun replaceCmdWithMember(cmd: String, sender: Member) = cmd.replace(SENDER_NAME, sender.nameCardOrNick)
 
-    fun replaceCmd(cmd: String, sender: QQ) = cmd.replace(SENDER_NAME, sender.nick)
+    fun replaceCmdWithFriend(cmd: String, sender: QQ) = cmd.replace(SENDER_NAME, sender.nick)
 }
