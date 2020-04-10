@@ -12,6 +12,7 @@ import kotlinx.serialization.UnstableDefault
 import net.mamoe.mirai.console.command.registerCommand
 import net.mamoe.mirai.console.plugins.PluginBase
 import net.mamoe.mirai.event.subscribeMessages
+import net.mamoe.mirai.message.GroupMessage
 
 @UnstableDefault
 @KtorExperimentalAPI
@@ -75,16 +76,25 @@ object BDXWebSocketPlugin : PluginBase() {
             startsWith(Template.prefix, trim = true) {
 
                 val cmd = message.contentToString()
-                var realCmd: String? = null
-                for (key in CmdMap.keys) {
-                    if (cmd.startsWith(key)) {
-                        realCmd = cmd.replaceFirst(key, CmdMap[key]!!)
-                        break
-                    }
-                }
 
-                if (manager.checkAuthority(sender.id, realCmd ?: cmd)) {
-                    websocket.sendCmd(realCmd ?: cmd)
+                if (manager.checkAuthority(sender.id, cmd)) {
+
+                    var realCmd: String? = null
+                    for (key in CmdMap.keys) {
+                        if (cmd.startsWith(key)) {
+                            realCmd = cmd.replaceFirst(key, CmdMap[key]!!)
+                            break
+                        }
+                    }
+
+                    if (realCmd == null) realCmd = cmd
+
+                    realCmd = Template.replaceCmd(realCmd, when(this) {
+                        is GroupMessage -> sender // as Member
+                        else -> sender            // as QQ
+                    })
+
+                    websocket.sendCmd(realCmd)
                 }
             }
 
