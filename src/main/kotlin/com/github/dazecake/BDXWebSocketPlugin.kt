@@ -104,7 +104,7 @@ object BDXWebSocketPlugin : PluginBase() {
         }
     }
 
-    private suspend fun launchWebsocket() {
+    internal suspend fun launchWebsocket() {
         if (websocket.life > 0) {
             launch {
                 websocket.life--
