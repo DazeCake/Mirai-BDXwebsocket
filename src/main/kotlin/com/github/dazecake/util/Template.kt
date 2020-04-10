@@ -11,6 +11,7 @@ object Template {
     private const val SENDER_NAME = "\${senderName}"
 
     lateinit var prefix: String
+    lateinit var prefixMc: String
     lateinit var rebootCmd: String
     lateinit var connectMsg: String
     lateinit var dropMsg: String
@@ -18,6 +19,7 @@ object Template {
 
     fun load(section: ConfigSection) {
         prefix = section.getString("prefix")
+        prefixMc = section.getString("mc_prefix")
         rebootCmd = section.getString("reboot_cmd")
         connectMsg = section.getString("connect_msg")
         dropMsg = section.getString("drop_msg")
