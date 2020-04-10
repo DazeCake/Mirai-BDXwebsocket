@@ -38,7 +38,10 @@ object BotClient {
     }
 
     private suspend fun onMemberMessage(pkg: MemberMessage) {
-        pushMessage("${pkg.target}: ${pkg.text}")
+        // filter mc chat msg
+        if (pkg.text.startsWith(Template.prefixMc)) {
+            pushMessage("${pkg.target}: ${pkg.text}")
+        }
     }
 
     private suspend fun onMemberJoin(pkg: MemberJoin) {
