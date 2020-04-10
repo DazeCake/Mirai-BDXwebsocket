@@ -63,19 +63,12 @@ class WebsocketClient(val serverInfo: ServerInfo) {
     }
 
     suspend fun sendCmd(cmd: String) {
-        var realCmd: String? = null
-        for (key in CmdMap.keys) {
-            if (cmd.startsWith(key)) {
-                realCmd = cmd.replaceFirst(key, CmdMap[key]!!)
-                break
-            }
-        }
 
         outgoing.send(
             Frame.Text(
                 BDXJson.json.stringify(Outgoing(
                     passwd = KeyGenerator(serverInfo.basePwd),
-                    cmd = realCmd ?: cmd
+                    cmd = cmd
                 ))
             )
         )

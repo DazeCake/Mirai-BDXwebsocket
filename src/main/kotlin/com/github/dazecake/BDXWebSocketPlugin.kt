@@ -25,7 +25,6 @@ object BDXWebSocketPlugin : PluginBase() {
     private val serverInfo: ServerInfo
 
     private val setting = loadConfig("base.yml")
-    private lateinit var manager: AuthorityManager
     private lateinit var websocket: WebsocketClient
 
     init {
@@ -58,6 +57,7 @@ object BDXWebSocketPlugin : PluginBase() {
             onCommand {
                 if (it[0] == "reload") {
                     loadConf()
+                    sendMessage("BDX配置重新加载成功")
                     true
                 } else {
                     false
@@ -68,16 +68,12 @@ object BDXWebSocketPlugin : PluginBase() {
 
     override fun onEnable() {
 
-        runBlocking {
-            launchWebsocket()
-        }
-
         subscribeMessages {
             startsWith(Template.prefix, trim = true) {
 
-                val cmd = message.contentToString()
+                val cmd = it
 
-                if (manager.checkAuthority(sender.id, cmd)) {
+                if (AuthorityManager.checkAuthority(sender.id, cmd)) {
 
                     var realCmd: String? = null
                     for (key in CmdMap.keys) {
@@ -99,6 +95,7 @@ object BDXWebSocketPlugin : PluginBase() {
             }
 
             case(Template.rebootCmd) {
+                websocket.life = serverInfo.retryTime
                 launchWebsocket()
             }
         }
