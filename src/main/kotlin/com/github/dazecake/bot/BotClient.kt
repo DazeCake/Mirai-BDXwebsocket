@@ -40,16 +40,16 @@ object BotClient {
     private suspend fun onMemberMessage(pkg: MemberMessage) {
         // filter mc chat msg
         if (pkg.text.startsWith(Template.prefixMc)) {
-            pushMessage("${pkg.target}: ${pkg.text}")
+            pushMessage(Template.BDXTemplate.onMsg(pkg.target, pkg.text.removePrefix(Template.prefix)))
         }
     }
 
     private suspend fun onMemberJoin(pkg: MemberJoin) {
-        pushMessage("${pkg.target}加入了服务器")
+        pushMessage(Template.BDXTemplate.onJoin(pkg.target))
     }
 
     private suspend fun onMemberLeave(pkg: MemberLeave) {
-        pushMessage("${pkg.target}退出了服务器")
+        pushMessage(Template.BDXTemplate.onLeave(pkg.target))
     }
 
     private suspend fun onMemberCmd(pkg: MemberCmd) {
