@@ -57,10 +57,7 @@ object BotClient {
     }
 
     private suspend fun onCmdResp(pkg: CmdResp) {
-        pushMessage(
-            if (pkg.onError == null) pkg.feedback
-            else pkg.text
-        )
+        pushMessage(pkg.text)
     }
 
     private suspend fun pushMessage(msg: String) {
