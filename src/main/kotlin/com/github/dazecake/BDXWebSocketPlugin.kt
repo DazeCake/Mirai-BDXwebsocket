@@ -54,19 +54,18 @@ object BDXWebSocketPlugin : PluginBase() {
             name = "BDX"
             onCommand {
                 when {
+                    it.isEmpty() -> false
                     it[0] == "reload" -> {
                         loadConf()
                         sendMessage("BDX配置重新加载成功")
                         true
                     }
-                    it[0] == "reboot" -> {
+                    it[0] == "reboot" || it[0] == "boot" -> {
                         websocket.life = serverInfo.retryTime
                         launchWebsocket()
                         true
                     }
-                    else -> {
-                        false
-                    }
+                    else -> false
                 }
             }
         }
