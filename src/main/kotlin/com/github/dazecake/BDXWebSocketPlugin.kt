@@ -52,6 +52,11 @@ object BDXWebSocketPlugin : PluginBase() {
 
         registerCommand {
             name = "BDX"
+            usage = """
+                BDX boot: 启动ws连接
+                BDX reboot: 重新开启ws连接
+                BDX reload: 重新热加载出base外的配置文件
+            """.trimIndent()
             onCommand {
                 when {
                     it.isEmpty() -> false
