@@ -35,7 +35,7 @@ class WebsocketClient(private val serverInfo: ServerInfo) {
     }
 
     private lateinit var outgoing: SendChannel<Frame>
-    private lateinit var session: DefaultClientWebSocketSession
+    private var session: DefaultClientWebSocketSession? = null
     internal var life = serverInfo.retryTime
 
     suspend fun connect() {
@@ -57,7 +57,7 @@ class WebsocketClient(private val serverInfo: ServerInfo) {
         try {
 
             // 结束上一个session
-            this.session.close()
+            this.session?.close()
 
             this.session = session
             outgoing = session.outgoing
