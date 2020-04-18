@@ -14,8 +14,8 @@ repositories {
     jcenter()
 }
 
-val miraiCoreVersion = "0.35.0"
-val miraiConsoleVersion = "0.4.8"
+val miraiCoreVersion = "0.37.4"
+val miraiConsoleVersion = "0.4.9"
 
 val kotlinVersion = "1.3.71"
 val ktorVersion = "1.3.2"
@@ -23,17 +23,13 @@ val ktorVersion = "1.3.2"
 
 dependencies {
     compileOnly(kotlin("stdlib-jdk8"))
-    compileOnly("net.mamoe:mirai-core-jvm:$miraiCoreVersion")
+    compileOnly("net.mamoe:mirai-core:$miraiCoreVersion")
     compileOnly("net.mamoe:mirai-console:$miraiConsoleVersion")
 
     implementation("io.ktor:ktor-client-websockets:$ktorVersion")
 
     compileOnly(kotlin("serialization", kotlinVersion))
 
-    testImplementation(kotlin("stdlib-jdk8"))
-    testImplementation("net.mamoe:mirai-core-jvm:$miraiCoreVersion")
-    testImplementation("net.mamoe:mirai-core-qqandroid-jvm:$miraiCoreVersion")
-    testImplementation("net.mamoe:mirai-console:$miraiConsoleVersion")
 }
 
 java {

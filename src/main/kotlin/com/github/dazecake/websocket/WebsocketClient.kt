@@ -1,7 +1,6 @@
 package com.github.dazecake.websocket
 
 import com.github.dazecake.BDXWebSocketPlugin
-import com.github.dazecake.CmdMap
 import com.github.dazecake.bot.BotClient
 import com.github.dazecake.data.Incoming
 import com.github.dazecake.data.Outgoing
