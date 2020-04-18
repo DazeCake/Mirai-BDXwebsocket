@@ -5,8 +5,6 @@ import com.github.dazecake.data.ServerInfo
 import com.github.dazecake.util.Template
 import com.github.dazecake.websocket.WebsocketClient
 import io.ktor.util.KtorExperimentalAPI
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.runBlocking
 import kotlinx.serialization.ImplicitReflectionSerializer
 import kotlinx.serialization.UnstableDefault
 import net.mamoe.mirai.console.command.registerCommand
@@ -55,12 +53,20 @@ object BDXWebSocketPlugin : PluginBase() {
         registerCommand {
             name = "BDX"
             onCommand {
-                if (it[0] == "reload") {
-                    loadConf()
-                    sendMessage("BDX配置重新加载成功")
-                    true
-                } else {
-                    false
+                when {
+                    it[0] == "reload" -> {
+                        loadConf()
+                        sendMessage("BDX配置重新加载成功")
+                        true
+                    }
+                    it[0] == "reboot" -> {
+                        websocket.life = serverInfo.retryTime
+                        launchWebsocket()
+                        true
+                    }
+                    else -> {
+                        false
+                    }
                 }
             }
         }
@@ -85,9 +91,9 @@ object BDXWebSocketPlugin : PluginBase() {
 
                     if (realCmd == null) realCmd = cmd
 
-                    realCmd = when(this) {
+                    realCmd = when (this) {
                         is GroupMessage -> Template.replaceCmdWithMember(realCmd, sender) // as Member
-                        else  -> Template.replaceCmdWithFriend(realCmd, sender)  // as QQ
+                        else -> Template.replaceCmdWithFriend(realCmd, sender)  // as QQ
                     }
 
                     websocket.sendCmd(realCmd)
@@ -103,10 +109,10 @@ object BDXWebSocketPlugin : PluginBase() {
 
     internal suspend fun launchWebsocket() {
         if (websocket.life > 0) {
-            launch {
-                websocket.life--
-                websocket.connect()
-            }
+
+            websocket.life--
+            websocket.connect()
+
         } else {
             BotClient.notifyClose()
         }
