@@ -18,12 +18,14 @@ import io.ktor.http.cio.websocket.readText
 import io.ktor.util.KtorExperimentalAPI
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.Job
+import kotlinx.coroutines.channels.ClosedReceiveChannelException
 import kotlinx.coroutines.channels.SendChannel
 import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
 import kotlinx.serialization.ImplicitReflectionSerializer
 import kotlinx.serialization.UnstableDefault
 import kotlinx.serialization.stringify
+import java.net.ConnectException
 
 @KtorExperimentalAPI
 @UnstableDefault
@@ -41,13 +43,23 @@ class WebsocketClient(private val serverInfo: ServerInfo) {
     suspend fun connect() {
 
         BDXWebSocketPlugin.launch {
-            client.ws(
-                method = HttpMethod.Post,
-                host = serverInfo.host,
-                port = serverInfo.port,
-                path = serverInfo.path
-            ) {
-                process(this)
+            try {
+                client.ws(
+                    method = HttpMethod.Post,
+                    host = serverInfo.host,
+                    port = serverInfo.port,
+                    path = serverInfo.path
+                ) {
+                    process(this)
+                }
+
+            } catch (e: ClosedReceiveChannelException) {
+                BotClient.notifyDrop()
+            } catch (e: ConnectException) {
+                BotClient.notifyDrop()
+            } catch (e: Exception) {
+                BotClient.notifyClose()
+                e.printStackTrace()
             }
         }
     }
@@ -65,21 +77,18 @@ class WebsocketClient(private val serverInfo: ServerInfo) {
             BotClient.notifyConnect()
             life = serverInfo.retryTime // 重置尝试次数
 
-            for (message in session.incoming) {
-                when (message) {
+            while (true) {
+                when (val frame = session.incoming.receive()) {
                     is Frame.Text -> {
-                        BotClient.onReceive(BDXJson.json.parse(Incoming.serializer(), message.readText()))
+                        BotClient.onReceive(BDXJson.json.parse(Incoming.serializer(), frame.readText()))
                     }
                 }
             }
+
         } catch (cancel: CancellationException) {
 
             // reboot
             BDXWebSocketPlugin.logger.info("BDX reboot")
-
-        } catch (e: Exception) {
-            e.printStackTrace()
-            BotClient.notifyDrop()
         }
     }
 
