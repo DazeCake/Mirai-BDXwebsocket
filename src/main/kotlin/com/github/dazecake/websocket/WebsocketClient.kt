@@ -14,7 +14,9 @@ import io.ktor.http.HttpMethod
 import io.ktor.http.cio.websocket.Frame
 import io.ktor.http.cio.websocket.readText
 import io.ktor.util.KtorExperimentalAPI
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.channels.SendChannel
+import kotlinx.coroutines.launch
 import kotlinx.serialization.ImplicitReflectionSerializer
 import kotlinx.serialization.UnstableDefault
 import kotlinx.serialization.stringify
@@ -30,35 +32,52 @@ class WebsocketClient(private val serverInfo: ServerInfo) {
 
     private lateinit var outgoing: SendChannel<Frame>
     internal var life = serverInfo.retryTime
+    var job: Job? = null
 
 
     suspend fun connect() {
-        try {
-            client.ws(
-                method = HttpMethod.Post,
-                host = serverInfo.host,
-                port = serverInfo.port,
-                path = serverInfo.path
-            ) {
 
-                this@WebsocketClient.outgoing = outgoing
+        // 停止上一次链接
+        job?.apply {
+            if (isActive) cancel()
+        }
 
-                BotClient.notifyConnect()
-                life = serverInfo.retryTime // 重置尝试次数
+        job = BDXWebSocketPlugin.launch {
 
-                while (true) {
-                    when (val frame = incoming.receive()) {
-                        is Frame.Text -> {
-                            BotClient.onReceive(BDXJson.json.parse(Incoming.serializer(), frame.readText()))
+            try {
+                // 结束上一次链接
+                job?.apply {
+                    if (isActive) this.cancel()
+                }
+
+                client.ws(
+                    method = HttpMethod.Post,
+                    host = serverInfo.host,
+                    port = serverInfo.port,
+                    path = serverInfo.path
+                ) {
+
+                    this@WebsocketClient.outgoing = outgoing
+
+                    BotClient.notifyConnect()
+                    life = serverInfo.retryTime // 重置尝试次数
+
+                    while (true) {
+                        when (val frame = incoming.receive()) {
+                            is Frame.Text -> {
+                                BotClient.onReceive(BDXJson.json.parse(Incoming.serializer(), frame.readText()))
+                            }
                         }
                     }
                 }
+            } catch (e: Exception) {
+                e.printStackTrace()
 
-
+                // 重新启动不通知掉线
+                job?.apply {
+                    if (isActive) BotClient.notifyDrop()
+                }
             }
-        } catch (e: Exception) {
-            e.printStackTrace()
-            BotClient.notifyDrop()
         }
     }
 

@@ -85,9 +85,9 @@ object BDXWebSocketPlugin : PluginBase() {
 
                     if (realCmd == null) realCmd = cmd
 
-                    realCmd = when(this) {
+                    realCmd = when (this) {
                         is GroupMessage -> Template.replaceCmdWithMember(realCmd, sender) // as Member
-                        else  -> Template.replaceCmdWithFriend(realCmd, sender)  // as QQ
+                        else -> Template.replaceCmdWithFriend(realCmd, sender)  // as QQ
                     }
 
                     websocket.sendCmd(realCmd)
@@ -103,10 +103,10 @@ object BDXWebSocketPlugin : PluginBase() {
 
     internal suspend fun launchWebsocket() {
         if (websocket.life > 0) {
-            launch {
-                websocket.life--
-                websocket.connect()
-            }
+
+            websocket.life--
+            websocket.connect()
+
         } else {
             BotClient.notifyClose()
         }
