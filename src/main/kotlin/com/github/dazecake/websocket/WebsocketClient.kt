@@ -8,14 +8,18 @@ import com.github.dazecake.data.ServerInfo
 import com.github.dazecake.util.BDXJson
 import com.github.dazecake.util.KeyGenerator
 import io.ktor.client.HttpClient
+import io.ktor.client.features.websocket.DefaultClientWebSocketSession
 import io.ktor.client.features.websocket.WebSockets
 import io.ktor.client.features.websocket.ws
 import io.ktor.http.HttpMethod
 import io.ktor.http.cio.websocket.Frame
+import io.ktor.http.cio.websocket.close
 import io.ktor.http.cio.websocket.readText
 import io.ktor.util.KtorExperimentalAPI
+import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.channels.SendChannel
+import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
 import kotlinx.serialization.ImplicitReflectionSerializer
 import kotlinx.serialization.UnstableDefault
@@ -31,53 +35,51 @@ class WebsocketClient(private val serverInfo: ServerInfo) {
     }
 
     private lateinit var outgoing: SendChannel<Frame>
+    private var session: DefaultClientWebSocketSession? = null
     internal var life = serverInfo.retryTime
-    var job: Job? = null
-
 
     suspend fun connect() {
 
-        // 停止上一次链接
-        job?.apply {
-            if (isActive) cancel()
+        BDXWebSocketPlugin.launch {
+            client.ws(
+                method = HttpMethod.Post,
+                host = serverInfo.host,
+                port = serverInfo.port,
+                path = serverInfo.path
+            ) {
+                process(this)
+            }
         }
+    }
 
-        job = BDXWebSocketPlugin.launch {
+    private suspend fun process(session: DefaultClientWebSocketSession) {
 
-            try {
-                // 结束上一次链接
-                job?.apply {
-                    if (isActive) this.cancel()
-                }
+        try {
 
-                client.ws(
-                    method = HttpMethod.Post,
-                    host = serverInfo.host,
-                    port = serverInfo.port,
-                    path = serverInfo.path
-                ) {
+            // 结束上一个session
+            this.session?.close()
 
-                    this@WebsocketClient.outgoing = outgoing
+            this.session = session
+            outgoing = session.outgoing
 
-                    BotClient.notifyConnect()
-                    life = serverInfo.retryTime // 重置尝试次数
+            BotClient.notifyConnect()
+            life = serverInfo.retryTime // 重置尝试次数
 
-                    while (true) {
-                        when (val frame = incoming.receive()) {
-                            is Frame.Text -> {
-                                BotClient.onReceive(BDXJson.json.parse(Incoming.serializer(), frame.readText()))
-                            }
-                        }
+            for (message in session.incoming) {
+                when (message) {
+                    is Frame.Text -> {
+                        BotClient.onReceive(BDXJson.json.parse(Incoming.serializer(), message.readText()))
                     }
                 }
-            } catch (e: Exception) {
-                e.printStackTrace()
-
-                // 重新启动不通知掉线
-                job?.apply {
-                    if (isActive) BotClient.notifyDrop()
-                }
             }
+        } catch (cancel: CancellationException) {
+
+            // reboot
+            BDXWebSocketPlugin.logger.info("BDX reboot")
+
+        } catch (e: Exception) {
+            e.printStackTrace()
+            BotClient.notifyDrop()
         }
     }
 
@@ -85,10 +87,12 @@ class WebsocketClient(private val serverInfo: ServerInfo) {
 
         outgoing.send(
             Frame.Text(
-                BDXJson.json.stringify(Outgoing(
-                    passwd = KeyGenerator(serverInfo.basePwd),
-                    cmd = cmd
-                ))
+                BDXJson.json.stringify(
+                    Outgoing(
+                        passwd = KeyGenerator(serverInfo.basePwd),
+                        cmd = cmd
+                    )
+                )
             )
         )
 
