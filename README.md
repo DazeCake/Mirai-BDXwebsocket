@@ -43,7 +43,7 @@ java -jar mirai-console-wrapper-x.x.x-all.jar
 #### Windows用户
 
 
-[一键安装包](https://suihou-my.sharepoint.com/personal/user18_5tb_site/_layouts/15/onedrive.aspx?id=%2Fpersonal%2Fuser18%5F5tb%5Fsite%2FDocuments%2FmiraiInstall&originalPath=aHR0cHM6Ly9zdWlob3UtbXkuc2hhcmVwb2ludC5jb20vOmY6L2cvcGVyc29uYWwvdXNlcjE4XzV0Yl9zaXRlL0VyV0dyOTdGcFBWRGprYm9JRG1EQUprQklELTIzWk1OYlRQZ2dHYWpmMXp2R3c_cnRpbWU9ZkNtR3NrUHUxMGc)
+请使用[一键安装包](https://suihou-my.sharepoint.com/:f:/g/personal/user18_5tb_site/ErWGr97FpPVDjkboIDmDAJkBID-23ZMNbTPggGajf1zvGw?e=51NZWM)
 
 
 ---
@@ -76,4 +76,5 @@ A：由于coolq的限制，只能在win平台运行，这给很多linux用户造
 
 ---
 Q：相比于同类插件，本插件有何优势？
+
 A：本插件引入用户组的概念，可以有效管理服主、op、玩家可以操作的命令，所有操作的命令均需注册后再使用，支持中文封装，**配置文件简洁易懂**等等
