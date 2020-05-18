@@ -14,8 +14,8 @@ repositories {
     jcenter()
 }
 
-val miraiCoreVersion = "0.37.4"
-val miraiConsoleVersion = "0.4.9"
+val miraiCoreVersion = "1.0-RC2-1"
+val miraiConsoleVersion = "0.5.1"
 
 val kotlinVersion = "1.3.71"
 val ktorVersion = "1.3.2"
