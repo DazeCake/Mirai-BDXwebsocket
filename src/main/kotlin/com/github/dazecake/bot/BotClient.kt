@@ -7,7 +7,6 @@ import io.ktor.util.KtorExperimentalAPI
 import kotlinx.serialization.ImplicitReflectionSerializer
 import kotlinx.serialization.UnstableDefault
 import net.mamoe.mirai.Bot
-import net.mamoe.mirai.contact.sendMessage
 
 @KtorExperimentalAPI
 @OptIn(UnstableDefault::class)
