@@ -5,7 +5,7 @@ plugins {
 }
 
 group = "com.github.dazecake"
-version = "0.2.1"
+version = "0.3.0"
 
 repositories {
     maven(url = "https://dl.bintray.com/kotlin/kotlin-eap")
