@@ -10,7 +10,8 @@ import kotlinx.serialization.UnstableDefault
 import net.mamoe.mirai.console.command.registerCommand
 import net.mamoe.mirai.console.plugins.PluginBase
 import net.mamoe.mirai.event.subscribeMessages
-import net.mamoe.mirai.message.GroupMessage
+import net.mamoe.mirai.message.GroupMessageEvent
+
 
 @UnstableDefault
 @KtorExperimentalAPI
@@ -96,7 +97,7 @@ object BDXWebSocketPlugin : PluginBase() {
                     if (realCmd == null) realCmd = cmd
 
                     realCmd = when (this) {
-                        is GroupMessage -> Template.replaceCmdWithMember(realCmd, sender) // as Member
+                        is GroupMessageEvent -> Template.replaceCmdWithMember(realCmd, sender) // as Member
                         else -> Template.replaceCmdWithFriend(realCmd, sender)  // as QQ
                     }
 

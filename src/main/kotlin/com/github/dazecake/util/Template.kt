@@ -1,8 +1,9 @@
 package com.github.dazecake.util
 
 import net.mamoe.mirai.console.plugins.ConfigSection
+import net.mamoe.mirai.contact.Friend
 import net.mamoe.mirai.contact.Member
-import net.mamoe.mirai.contact.QQ
+import net.mamoe.mirai.contact.User
 import net.mamoe.mirai.contact.nameCardOrNick
 
 object Template {
@@ -46,5 +47,5 @@ object Template {
 
     fun replaceCmdWithMember(cmd: String, sender: Member) = cmd.replace(SENDER_NAME, sender.nameCardOrNick)
 
-    fun replaceCmdWithFriend(cmd: String, sender: QQ) = cmd.replace(SENDER_NAME, sender.nick)
+    fun replaceCmdWithFriend(cmd: String, sender: User) = cmd.replace(SENDER_NAME, sender.nick)
 }
