@@ -97,9 +97,9 @@ class WebsocketClient(private val serverInfo: ServerInfo) {
 
         outgoing.send(
             Frame.Text(
-                BDXJson.json.stringify(
+                BDXJson.stringifyOuting(
                     RunCmd(passwd = "", cmd = cmd).apply {
-                        passwd = KeyGenerator(serverInfo.basePwd, BDXJson.json.stringify(this))
+                        passwd = KeyGenerator(serverInfo.basePwd, BDXJson.stringifyOuting(this))
                     }
                 )
             )
