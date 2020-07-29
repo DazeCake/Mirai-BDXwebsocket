@@ -8,7 +8,7 @@ object KeyGenerator {
 
     private val format = SimpleDateFormat("yyyyMMddHHmm")
 
-    operator fun invoke(pwd: String): String = md5(pwd + format.format(Date()))
+    operator fun invoke(pwd: String): String = md5(pwd + format.format(Date()) + "@pw")
 
     private fun md5(raw: String) =
         MessageDigest.getInstance("MD5").apply { update(raw.toByteArray()) }.digest().toUHexString()
