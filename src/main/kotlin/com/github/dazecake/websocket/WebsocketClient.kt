@@ -4,6 +4,7 @@ import com.github.dazecake.BDXWebSocketPlugin
 import com.github.dazecake.bot.BotClient
 import com.github.dazecake.data.Incoming
 import com.github.dazecake.data.Outgoing
+import com.github.dazecake.data.RunCmd
 import com.github.dazecake.data.ServerInfo
 import com.github.dazecake.util.BDXJson
 import com.github.dazecake.util.KeyGenerator
@@ -97,10 +98,9 @@ class WebsocketClient(private val serverInfo: ServerInfo) {
         outgoing.send(
             Frame.Text(
                 BDXJson.json.stringify(
-                    Outgoing(
-                        passwd = KeyGenerator(serverInfo.basePwd),
-                        cmd = cmd
-                    )
+                    RunCmd(passwd = "", cmd = cmd).apply {
+                        passwd = KeyGenerator(serverInfo.basePwd, BDXJson.json.stringify(this))
+                    }
                 )
             )
         )
