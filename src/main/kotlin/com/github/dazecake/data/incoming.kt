@@ -41,3 +41,9 @@ data class CmdResp(
     val Auth: String = "",
     val text: String = ""
 ) : Incoming()
+
+@Serializable
+@SerialName("onservercrash")
+data class ServerCrash(
+    val reason: String = ""
+) : Incoming()

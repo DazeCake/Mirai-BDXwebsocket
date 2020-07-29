@@ -20,6 +20,7 @@ object BotClient {
             is MemberLeave -> onMemberLeave(pkg)
             is MemberCmd -> onMemberCmd(pkg)
             is CmdResp -> onCmdResp(pkg)
+            is ServerCrash -> onServerCrash(pkg)
         }
     }
 
@@ -59,6 +60,11 @@ object BotClient {
         pushMessage(pkg.text)
     }
 
+    private suspend fun onServerCrash(pkg: ServerCrash) {
+        pushMessage(pkg.reason)
+    }
+
+
     private suspend fun pushMessage(msg: String) {
         val bdx = BDXWebSocketPlugin
         bdx.bots.forEach {
@@ -89,14 +95,5 @@ object BotClient {
         }
     }
 
-    private fun getBotOrNull(id: Long): Bot? {
-        Bot.instances.forEach {
-            it.get()?.let { bot ->
-                if (bot.id == id) {
-                    return bot
-                }
-            }
-        }
-        return null
-    }
+    private fun getBotOrNull(id: Long): Bot? = Bot.getInstanceOrNull(id)
 }
