@@ -7,10 +7,12 @@ import io.ktor.util.KtorExperimentalAPI
 import kotlinx.serialization.ImplicitReflectionSerializer
 import kotlinx.serialization.UnstableDefault
 import net.mamoe.mirai.Bot
+import net.mamoe.mirai.console.plugins.ToBeRemoved
 
+@ToBeRemoved
 @KtorExperimentalAPI
-@OptIn(UnstableDefault::class)
 @ImplicitReflectionSerializer
+@OptIn(UnstableDefault::class)
 object BotClient {
 
     suspend fun onReceive(pkg: Incoming) {
@@ -53,7 +55,7 @@ object BotClient {
     }
 
     private suspend fun onMemberCmd(pkg: MemberCmd) {
-//        pushMessage("${pkg.target}执行了命令: ${pkg.CMD}")
+        pushMessage(Template.BDXTemplate.onCMD(pkg.target,pkg.text))
     }
 
     private suspend fun onCmdResp(pkg: CmdResp) {

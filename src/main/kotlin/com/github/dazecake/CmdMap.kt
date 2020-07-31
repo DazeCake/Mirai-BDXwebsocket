@@ -1,9 +1,11 @@
 package com.github.dazecake
 
 import net.mamoe.mirai.console.plugins.Config
+import net.mamoe.mirai.console.plugins.ToBeRemoved
 
 object CmdMap : HashMap<String, String>() {
 
+    @ToBeRemoved
     fun load(section: Config) {
         clear()
 

@@ -26,8 +26,10 @@ import kotlinx.coroutines.launch
 import kotlinx.serialization.ImplicitReflectionSerializer
 import kotlinx.serialization.UnstableDefault
 import kotlinx.serialization.stringify
+import net.mamoe.mirai.console.plugins.ToBeRemoved
 import java.net.ConnectException
 
+@ToBeRemoved
 @KtorExperimentalAPI
 @UnstableDefault
 @ImplicitReflectionSerializer
@@ -76,7 +78,7 @@ class WebsocketClient(private val serverInfo: ServerInfo) {
             outgoing = session.outgoing
 
             BotClient.notifyConnect()
-            life = serverInfo.retryTime // 重置尝试次数
+            life = serverInfo.retryTime// 重置尝试次数
 
             while (true) {
                 when (val frame = session.incoming.receive()) {
@@ -105,8 +107,6 @@ class WebsocketClient(private val serverInfo: ServerInfo) {
             )
         )
 
-        BDXWebSocketPlugin.logger.info(
-            "Sent BDX command -> $cmd"
-        )
+        BDXWebSocketPlugin.logger.info("Sent BDX command -> $cmd")
     }
 }
