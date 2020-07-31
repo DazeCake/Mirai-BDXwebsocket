@@ -1,7 +1,7 @@
 package com.github.dazecake.util
 
 import net.mamoe.mirai.console.plugins.ConfigSection
-import net.mamoe.mirai.contact.Friend
+import net.mamoe.mirai.console.plugins.ToBeRemoved
 import net.mamoe.mirai.contact.Member
 import net.mamoe.mirai.contact.User
 import net.mamoe.mirai.contact.nameCardOrNick
@@ -9,7 +9,6 @@ import net.mamoe.mirai.contact.nameCardOrNick
 object Template {
 
     private const val SENDER_NAME = "\${senderName}"
-
     lateinit var prefix: String
     lateinit var prefixMc: String
     lateinit var rebootCmd: String
@@ -32,6 +31,7 @@ object Template {
         fun onLeave(target: String) = onLeave.replace(TARGET, target)
     }
 
+    @ToBeRemoved
     fun load(section: ConfigSection) {
         prefix = section.getString("prefix")
         prefixMc = section.getString("mc_prefix")
@@ -45,7 +45,11 @@ object Template {
         BDXTemplate.onLeave = section.getString("on_leave_template")
     }
 
-    fun replaceCmdWithMember(cmd: String, sender: Member) = cmd.replace(SENDER_NAME, sender.nameCardOrNick)
+    fun replaceCmdWithMember(cmd: String, sender: Member) {
+        cmd.replace(SENDER_NAME, sender.nameCardOrNick)
+    }
 
-    fun replaceCmdWithFriend(cmd: String, sender: User) = cmd.replace(SENDER_NAME, sender.nick)
+    fun replaceCmdWithFriend(cmd: String, sender: User) {
+        cmd.replace(SENDER_NAME, sender.nick)
+    }
 }

@@ -9,10 +9,12 @@ import kotlinx.serialization.ImplicitReflectionSerializer
 import kotlinx.serialization.UnstableDefault
 import net.mamoe.mirai.console.command.registerCommand
 import net.mamoe.mirai.console.plugins.PluginBase
+import net.mamoe.mirai.console.plugins.ToBeRemoved
 import net.mamoe.mirai.event.subscribeMessages
 import net.mamoe.mirai.message.GroupMessageEvent
 
 
+@ToBeRemoved
 @UnstableDefault
 @KtorExperimentalAPI
 @ImplicitReflectionSerializer
@@ -24,7 +26,7 @@ object BDXWebSocketPlugin : PluginBase() {
     private val serverInfo: ServerInfo
 
     private val setting = loadConfig("base.yml")
-    private lateinit var websocket: WebsocketClient
+    private lateinit var Websocket: WebsocketClient
 
     init {
         bots.addAll(setting.getLongList("bots"))
@@ -49,7 +51,7 @@ object BDXWebSocketPlugin : PluginBase() {
     }
 
     override fun onLoad() {
-        websocket = WebsocketClient(serverInfo)
+        Websocket = WebsocketClient(serverInfo)
 
         registerCommand {
             name = "BDX"
@@ -67,7 +69,7 @@ object BDXWebSocketPlugin : PluginBase() {
                         true
                     }
                     it[0] == "reboot" || it[0] == "boot" -> {
-                        websocket.life = serverInfo.retryTime
+                        Websocket.life = serverInfo.retryTime
                         launchWebsocket()
                         true
                     }
@@ -97,26 +99,26 @@ object BDXWebSocketPlugin : PluginBase() {
                     if (realCmd == null) realCmd = cmd
 
                     realCmd = when (this) {
-                        is GroupMessageEvent -> Template.replaceCmdWithMember(realCmd, sender) // as Member
-                        else -> Template.replaceCmdWithFriend(realCmd, sender)  // as QQ
+                        is GroupMessageEvent -> Template.replaceCmdWithMember(realCmd, sender).toString() // as Member
+                        else -> Template.replaceCmdWithFriend(realCmd, sender).toString()  // as QQ
                     }
 
-                    websocket.sendCmd(realCmd)
+                    Websocket.sendCmd(realCmd)
                 }
             }
 
             case(Template.rebootCmd) {
-                websocket.life = serverInfo.retryTime
+                Websocket.life = serverInfo.retryTime
                 launchWebsocket()
             }
         }
     }
 
     internal suspend fun launchWebsocket() {
-        if (websocket.life > 0) {
+        if (Websocket.life > 0) {
 
-            websocket.life--
-            websocket.connect()
+            Websocket.life--
+            Websocket.connect()
 
         } else {
             BotClient.notifyClose()
