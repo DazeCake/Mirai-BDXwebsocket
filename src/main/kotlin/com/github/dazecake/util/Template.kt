@@ -21,11 +21,12 @@ object Template {
 
         private const val TARGET = "\${target}"
         private const val MSG = "\${msg}"
-
+        private const val TEXT = "\${text}"
         lateinit var onMsg: String
+        lateinit var onCMD: String
         lateinit var onJoin: String
         lateinit var onLeave: String
-
+        fun onCMD(target: String, text: String) = onMsg.replace(TARGET, target).replace(TEXT, text)
         fun onMsg(target: String, msg: String) = onMsg.replace(TARGET, target).replace(MSG, msg)
         fun onJoin(target: String) = onJoin.replace(TARGET, target)
         fun onLeave(target: String) = onLeave.replace(TARGET, target)
@@ -43,6 +44,7 @@ object Template {
         BDXTemplate.onMsg = section.getString("on_msg_template")
         BDXTemplate.onJoin = section.getString("on_join_template")
         BDXTemplate.onLeave = section.getString("on_leave_template")
+        BDXTemplate.onCMD = section.getString("on_cmd_template")
     }
 
     fun replaceCmdWithMember(cmd: String, sender: Member) {

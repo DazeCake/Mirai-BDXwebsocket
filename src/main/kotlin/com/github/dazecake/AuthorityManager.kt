@@ -4,10 +4,12 @@ import io.ktor.util.KtorExperimentalAPI
 import kotlinx.serialization.ImplicitReflectionSerializer
 import kotlinx.serialization.UnstableDefault
 import net.mamoe.mirai.console.plugins.ConfigSection
+import net.mamoe.mirai.console.plugins.ToBeRemoved
 
+@ToBeRemoved
 @KtorExperimentalAPI
-@OptIn(UnstableDefault::class)
 @ImplicitReflectionSerializer
+@OptIn(UnstableDefault::class)
 object AuthorityManager {
 
     private const val DEFAULT_AUTHORITY = "default"
