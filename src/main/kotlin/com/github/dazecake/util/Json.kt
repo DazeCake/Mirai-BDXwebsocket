@@ -16,5 +16,7 @@ object BDXJson {
         classDiscriminator = "operate"
     }
 
-    fun stringifyOuting(value: Outgoing): String = json.stringify(Outgoing.serializer(), value)
+    fun stringifyOuting(value: Outgoing): String {
+        return json.stringify(Outgoing.serializer(), value)
+    }
 }

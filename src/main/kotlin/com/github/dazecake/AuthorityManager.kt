@@ -11,7 +11,6 @@ import net.mamoe.mirai.console.plugins.ToBeRemoved
 @ImplicitReflectionSerializer
 @OptIn(UnstableDefault::class)
 object AuthorityManager {
-
     private const val DEFAULT_AUTHORITY = "default"
 
     private val authoritiesMap: MutableMap<Long, String> = mutableMapOf()
