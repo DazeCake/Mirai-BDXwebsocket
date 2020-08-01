@@ -5,6 +5,8 @@ import com.github.dazecake.data.ServerInfo
 import com.github.dazecake.util.Template
 import com.github.dazecake.websocket.WebsocketClient
 import io.ktor.util.KtorExperimentalAPI
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.async
 import kotlinx.serialization.ImplicitReflectionSerializer
 import kotlinx.serialization.UnstableDefault
 import net.mamoe.mirai.console.command.registerCommand
@@ -52,7 +54,6 @@ object BDXWebSocketPlugin : PluginBase() {
 
     override fun onLoad() {
         Websocket = WebsocketClient(serverInfo)
-
         registerCommand {
             name = "BDX"
             usage = """
@@ -80,7 +81,9 @@ object BDXWebSocketPlugin : PluginBase() {
     }
 
     override fun onEnable() {
-
+        GlobalScope.async {
+            launchWebsocket()
+        }
         subscribeMessages {
             startsWith(Template.prefix, trim = true) {
 
@@ -99,8 +102,8 @@ object BDXWebSocketPlugin : PluginBase() {
                     if (realCmd == null) realCmd = cmd
 
                     realCmd = when (this) {
-                        is GroupMessageEvent -> Template.replaceCmdWithMember(realCmd, sender).toString() // as Member
-                        else -> Template.replaceCmdWithFriend(realCmd, sender).toString()  // as QQ
+                        is GroupMessageEvent -> Template.replaceCmdWithMember(realCmd, sender) // as Member
+                        else -> Template.replaceCmdWithFriend(realCmd, sender)  // as QQ
                     }
 
                     Websocket.sendCmd(realCmd)
@@ -112,6 +115,7 @@ object BDXWebSocketPlugin : PluginBase() {
                 launchWebsocket()
             }
         }
+
     }
 
     internal suspend fun launchWebsocket() {

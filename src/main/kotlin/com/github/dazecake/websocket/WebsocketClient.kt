@@ -76,7 +76,6 @@ class WebsocketClient(private val serverInfo: ServerInfo) {
 
             this.session = session
             outgoing = session.outgoing
-
             BotClient.notifyConnect()
             life = serverInfo.retryTime// 重置尝试次数
 
@@ -96,7 +95,6 @@ class WebsocketClient(private val serverInfo: ServerInfo) {
     }
 
     suspend fun sendCmd(cmd: String) {
-
         outgoing.send(
             Frame.Text(
                 BDXJson.stringifyOuting(

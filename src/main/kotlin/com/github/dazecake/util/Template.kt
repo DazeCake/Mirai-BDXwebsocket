@@ -47,11 +47,11 @@ object Template {
         BDXTemplate.onCMD = section.getString("on_cmd_template")
     }
 
-    fun replaceCmdWithMember(cmd: String, sender: Member) {
-        cmd.replace(SENDER_NAME, sender.nameCardOrNick)
+    fun replaceCmdWithMember(cmd: String, sender: Member) :String{
+        return cmd.replace(SENDER_NAME, sender.nameCardOrNick)
     }
 
-    fun replaceCmdWithFriend(cmd: String, sender: User) {
-        cmd.replace(SENDER_NAME, sender.nick)
+    fun replaceCmdWithFriend(cmd: String, sender: User) :String{
+        return cmd.replace(SENDER_NAME, sender.nick)
     }
 }
