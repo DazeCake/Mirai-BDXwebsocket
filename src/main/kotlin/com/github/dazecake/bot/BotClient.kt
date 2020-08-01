@@ -68,6 +68,8 @@ object BotClient {
 
 
     private suspend fun pushMessage(msg: String) {
+        if(msg.isEmpty()) return
+
         val bdx = BDXWebSocketPlugin
         bdx.bots.forEach {
             getBotOrNull(it)?.apply {
