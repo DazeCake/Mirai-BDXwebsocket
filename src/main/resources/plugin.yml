@@ -1,6 +1,6 @@
 name: "BDXWebSocket"
 author: "ryoii"
-version: "0.4.0"
+version: "0.4.1"
 main: "com.github.dazecake.BDXWebSocketPlugin"
 info: ""
 depends: []
