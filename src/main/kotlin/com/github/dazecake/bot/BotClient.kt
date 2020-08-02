@@ -26,17 +26,24 @@ object BotClient {
         }
     }
 
-    internal suspend fun notifyConnect() {
+    public suspend fun notifyConnect() {
         pushMessage(Template.connectMsg)
     }
-
-    internal suspend fun notifyDrop() {
-        pushMessage(Template.dropMsg)
+    var LastTimestamp : Long = 0
+    public suspend fun notifyDrop() {
+        LastTimestamp = System.currentTimeMillis()
+        val NowTimestamp = System.currentTimeMillis()
+        if((NowTimestamp - LastTimestamp)>10000)
+            pushMessage(Template.dropMsg)
         BDXWebSocketPlugin.launchWebsocket()
     }
 
-    internal suspend fun notifyClose() {
-        pushMessage(Template.closeMsg)
+    public suspend fun notifyClose() {
+        LastTimestamp = System.currentTimeMillis()
+        val NowTimestamp = System.currentTimeMillis()
+        if((NowTimestamp - LastTimestamp)>10000)
+            pushMessage(Template.closeMsg)
+        BDXWebSocketPlugin.launchWebsocket()
     }
 
     private suspend fun onMemberMessage(pkg: MemberMessage) {
