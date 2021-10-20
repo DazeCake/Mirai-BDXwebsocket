@@ -1,3 +1,5 @@
+# **本项目停止维护，有缘再见**
+
 # Mirai-BDXwebsocket
 
 通过websocket链接Bedrockx实现qq联动远控 支持全平台运行
